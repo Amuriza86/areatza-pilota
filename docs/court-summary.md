@@ -15,3 +15,7 @@ Se puede cerrar mediante la cruz, el botón «Ikusi egutegia» o Escape del diá
 jsdom simula showModal/close; no valida el foco nativo, la distribución visual ni el gesto de cierre en iOS. El navegador de pruebas no permite abrir el archivo local de vista previa. Queda pendiente comprobar el diálogo en un navegador real, incluido iPhone. El empaquetado de Wrangler con --dry-run se ha completado sin publicar.
 
 Esta propuesta parte de la rama de recuperación; su diff añade solo la función de resumen, pruebas y documentación. No incorpora la recuperación a main ni modifica Cloudflare. Los nombres y el destino de despliegue conservan el comportamiento de esa rama base; resolverlos antes de publicar sobre la web actual.
+
+## Nombres de equipos
+
+El manejador admite `TEAM_NAMES_JSON`, una cadena JSON con códigos como claves y etiquetas como valores. Se configura privadamente en el runtime y no se incluye su contenido en Git. Las etiquetas se aplican tanto al calendario y sus filtros como al resumen por frontón y la exportación ICS. Si falta o no es válida, se muestran los códigos de equipo. Los valores se serializan escapando caracteres que podrían cerrar el script.
