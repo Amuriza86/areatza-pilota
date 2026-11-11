@@ -1,8 +1,8 @@
 # Areatza Pilota
 
-Agenda en euskera de los partidos del club. Cloudflare Worker con una página HTML y un endpoint `/api/matches` que consulta las ligaxkas de la federación.
+Agenda en euskera de los partidos del club: calendario, filtros, exportación ICS y resumen por frontón tras la actualización inicial.
 
-## Desarrollo local
+## Desarrollo y comprobaciones
 
 Requisitos: Node.js 22 o superior y npm.
 
@@ -13,33 +13,23 @@ npm run build
 npm run dev
 ```
 
-Abrir la URL local que indique Wrangler (habitualmente http://127.0.0.1:8787). El desarrollo usa el runtime local; actualizar partidos realiza consultas de lectura al sitio público de la federación. `npm run build` solo empaqueta mediante `--dry-run`; no publica.
+`npm run build` ejecuta Wrangler con `--dry-run`: prepara y comprueba el paquete sin publicarlo. La compilación consulta la web pública actual para conservar las etiquetas de los nueve equipos. Si no puede recuperarlas todas, falla antes de publicar. Para una comprobación local reproducible puede indicarse `TEAM_NAMES_SOURCE_FILE` con una copia HTML de esa web.
+
+## Publicación
+
+Cloudflare está conectado al repositorio y usa `main` como rama de producción, con el comando `npx wrangler deploy`. Incorporar cambios a main puede iniciar la publicación automática. La configuración apunta al Worker `areatza-pilota` y conserva la fecha de compatibilidad 2026-10-21.
+
+Wrangler ejecuta `scripts/preserve-team-names.mjs` antes de empaquetar: genera `.generated/index.js` con las etiquetas recuperadas de la web actual. Ese directorio está excluido de Git; no subir sus contenidos. El Worker utiliza estos nombres como respaldo, y permite sustituirlos mediante la configuración privada `TEAM_NAMES_JSON`. No se necesitan credenciales para leer el HTML público existente.
+
+No guardar nombres personales, credenciales o tokens en el repositorio público. Las comprobaciones y las copias privadas de recuperación se describen en [la documentación de migración](docs/migration.md).
 
 ## Estructura
 
-- `worker/index.js`: entrada y página HTML importada como texto.
-- `worker/calendar.js`: limpieza, selectores, análisis y consulta de calendarios.
-- `worker/handler.js`: rutas y caché en memoria durante 60 segundos.
-- `web/index.html`: página recuperada, estilos, escudo embebido, filtros y exportación ICS.
-- `test/`: pruebas aisladas con respuestas simuladas y comprobaciones del frontend.
-- `docs/migration.md`: procedencia, diferencias y comprobaciones pendientes.
+- `worker/index.js`: entrada original y página HTML importada como texto.
+- `worker/calendar.js`: análisis y consulta de los calendarios de la federación.
+- `worker/handler.js`: rutas, caché de 60 segundos y etiquetas privadas.
+- `web/index.html`: interfaz y resumen por frontón.
+- `scripts/preserve-team-names.mjs`: preparación de las etiquetas antes del despliegue.
+- `test/`: pruebas aisladas del servidor y la interfaz.
 
-Sin dependencias de ejecución externas. Wrangler es una dependencia de desarrollo fijada en `package-lock.json`. El código recuperado no utiliza bindings ni secretos; esto no confirma la configuración remota.
-
-## Privacidad
-
-El repositorio es público. Se ha vaciado `TEAM_NAMES` para mostrar los códigos de equipo. No introducir nombres de menores, credenciales, `.env`, `.dev.vars` ni tokens en Git. La copia privada de recuperación contiene la página original; no subirla al repositorio. La web en producción no se ha cambiado.
-
-## Despliegue manual
-
-No hay integración ni workflow de despliegue automático. La configuración incluida usa el nombre independiente `areatza-pilota-migration-preview`; no representa la configuración de producción.
-
-Antes de cualquier publicación: obtener autorización del propietario, autenticar Cloudflare (`npx wrangler login`), comprobar cuenta, nombre del Worker, bindings, variables, rutas, fecha y flags de compatibilidad y conservar una versión recuperable. Validar primero en un Worker independiente. Tras autorización, la publicación manual con esta configuración sería `npx wrangler deploy` y afectaría únicamente al nombre configurado: revisar siempre ese nombre y la cuenta antes de ejecutar.
-
-Para producción, preparar una configuración verificada aparte y revisarla antes de publicar. No cambiar el nombre al Worker existente como parte de esta migración. No se han ejecutado comandos de publicación.
-
-Referencia: [comandos de Wrangler](https://developers.cloudflare.com/workers/wrangler/commands/).
-
-## Resumen por frontón
-
-Tras la actualización inicial correcta se abre un resumen de partidos agrupados por frontón. Permite alternar entre el fin de semana y todos los próximos partidos, cerrarlo y volver a abrirlo con «Pilotalekuka». Véanse [comportamiento y validación](docs/court-summary.md).
+Véanse [comportamiento del resumen por frontón](docs/court-summary.md) y [publicación autorizada](docs/publication.md).

@@ -1,8 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  // Isolated migration configuration, selected settings verified from owner-provided production screenshots.
-  "name": "areatza-pilota-migration-preview",
-  "main": "worker/index.js",
+  // Production settings verified from owner-provided screenshots; publication authorized.
+  "name": "areatza-pilota",
+  "main": ".generated/index.js",
+  "build": {"command": "node scripts/preserve-team-names.mjs", "watch_dir": ["worker", "web", "scripts"]},
+  "workers_dev": true,
+  "preview_urls": true,
   "compatibility_date": "2026-10-21",
   "compatibility_flags": [],
   "observability": {"enabled": false},

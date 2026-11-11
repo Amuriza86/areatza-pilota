@@ -18,3 +18,6 @@ coverage/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Private build-time team labels
+.generated/
