@@ -1,0 +1,8 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Isolated migration configuration, NOT an export of production settings.
+  "name": "areatza-pilota-migration-preview",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-11-11",
+  "rules": [{"type": "Text", "globs": ["**/*.html"], "fallthrough": true}]
+}
