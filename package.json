@@ -12,6 +12,7 @@
     "build": "wrangler deploy --dry-run --outdir dist"
   },
   "devDependencies": {
+    "jsdom": "26.1.0",
     "wrangler": "4.160.0"
   }
 }

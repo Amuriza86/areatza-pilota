@@ -39,3 +39,7 @@ Antes de cualquier publicación: obtener autorización del propietario, autentic
 Para producción, preparar una configuración verificada aparte y revisarla antes de publicar. No cambiar el nombre al Worker existente como parte de esta migración. No se han ejecutado comandos de publicación.
 
 Referencia: [comandos de Wrangler](https://developers.cloudflare.com/workers/wrangler/commands/).
+
+## Resumen por frontón
+
+Tras la actualización inicial correcta se abre un resumen de partidos agrupados por frontón. Permite alternar entre el fin de semana y todos los próximos partidos, cerrarlo y volver a abrirlo con «Pilotalekuka». Véanse [comportamiento y validación](docs/court-summary.md).
