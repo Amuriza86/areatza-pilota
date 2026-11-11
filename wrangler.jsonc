@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Production settings verified from owner-provided screenshots; publication authorized.
+  "name": "areatza-pilota",
+  "main": ".generated/index.js",
+  "build": {"command": "node scripts/preserve-team-names.mjs", "watch_dir": ["worker", "web", "scripts"]},
+  "workers_dev": true,
+  "preview_urls": true,
+  "compatibility_date": "2026-10-21",
+  "compatibility_flags": [],
+  "observability": {"enabled": false},
+  "triggers": {"crons": []},
+  "rules": [{"type": "Text", "globs": ["**/*.html"], "fallthrough": true}]
+}
