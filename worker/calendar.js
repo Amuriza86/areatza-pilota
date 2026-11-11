@@ -3,6 +3,11 @@ export const SOURCE = 'https://bizkaiapilota.eus/pub/competicion.asp?idioma=eu&i
 export function clean(s) {
   return s.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/\s+/g, ' ').trim();
 }
+// Federation team cells append player initials inside a presentation div.
+// Keep the team label alone so IDs, filters and team counts remain stable.
+export function teamCell(html) {
+  return clean(html.replace(/<div\b[^>]*>[\s\S]*?<\/div>/gi, ''));
+}
 export function options(html, id) {
   const s = [...html.matchAll(/<select\b([^>]*)>([\s\S]*?)<\/select>/gi)].find(m => m[1].includes('id="' + id + '"'));
   return s ? [...s[2].matchAll(/<option\b[^>]*value="(\d+)"[^>]*>([\s\S]*?)<\/option>/gi)].map(m => ({ id: m[1], name: clean(m[2]), selected: /\bselected\b/i.test(m[0]) })) : [];
@@ -20,7 +25,7 @@ export function parseCalendar(html, category, phase = 'LIGAXKA') {
       const text = clean(row[1]);
       const roundMatch = text.match(/Jardunaldia:\s*(\d+)/i);
       if (roundMatch) { round = roundMatch[1]; continue; }
-      const cells = [...row[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map(m => clean(m[1]));
+      const cells = [...row[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map((m, index) => (index === 3 || index === 4) ? teamCell(m[1]) : clean(m[1]));
       if (cells.length < 6 || !/^\d{4}\/\d{2}\/\d{2}/.test(cells[0])) continue;
       if (!/\bAREATZA\b/i.test(cells[3] + ' ' + cells[4])) continue;
       const [date, time = ''] = cells[0].split(' ');

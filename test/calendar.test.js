@@ -54,3 +54,10 @@ test('failed refresh returns 502 and does not replace last good cache',async()=>
   assert.equal(response.status,502);assert.equal((await response.json()).error,'offline');
   fail=false; assert.equal((await worker.fetch(req)).status,200);
 });
+
+test('player initial annotations do not create additional teams or change fixture IDs',()=>{
+  const basic=parseCalendar(calendar(row('AREATZA XX','OTHER')),category).games[0];
+  const decorated=parseCalendar(calendar(row('AREATZA XX<div style="font-size:10px"><span>X,&nbsp;Y.</span><br><span>Z,&nbsp;W.</span></div>','OTHER<div><span>Q,&nbsp;R.</span></div>')),category).games[0];
+  assert.equal(decorated.home,'AREATZA XX'); assert.equal(decorated.away,'OTHER');
+  assert.equal(decorated.id,basic.id);
+});
