@@ -2,6 +2,8 @@
 
 Agenda en euskera de los partidos del club: calendario, filtros, exportación ICS y resumen por frontón tras la actualización inicial.
 
+La ventana incluye **KARTELA**: PIN `0000`, cartel de los partidos del periodo seleccionado que se disputan en Areatza y descarga PNG. Conserva la plantilla, el título centrado y el logo 3D en la esquina inferior izquierda de la fotografía. No incluye envío por WhatsApp.
+
 ## Desarrollo y comprobaciones
 
 Requisitos: Node.js 22 o superior y npm.

@@ -1,3 +1,4 @@
+import { kartelaResponse } from './kartela.js';
 import { collectCalendars } from './calendar.js';
 
 // Labels live in private runtime configuration, never in the public repository.
@@ -21,6 +22,10 @@ export function createWorker(html, collect = collectCalendars, now = Date.now) {
   let cached = null;
   return { async fetch(request, env = {}) {
     const url = new URL(request.url);
+    if (url.pathname === "/assets/areatza-logo-3d.webp" || url.pathname === "/api/kartela-template") {
+      const poster = await kartelaResponse(request);
+      if (poster) return poster;
+    }
     if (url.pathname === '/api/matches') {
       try {
         if (!cached || now() - cached.at > 60000) {
